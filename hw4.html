@@ -1,0 +1,158 @@
+<html>
+<head>
+<title> Homework #4 </title>
+</head>
+    <style>
+        body{
+        text-align: center;
+        margin: auto;
+        padding: 100px;
+        }
+        
+    </style>
+    <body>
+        
+        
+        <h1 align="center">Enter URL for Newspaper List XML File</h1>
+    <br>
+    <form name="myform" method="POST">
+        <input name="URL" type="text" >
+        <br><br>    
+        <input type="submit" value="Submit Query" onclick="viewXML(this.form)"/>
+        </form>
+    
+        
+        <script type="text/javascript">
+        
+function viewXML(what)
+{
+    var URL = what.URL.value;
+    var xmlDoc;
+
+     
+    if(!check()) return false;
+    xmlDoc = loadXML(URL);
+    demo(xmlDoc);
+
+}
+    function loadXML(url) {
+      if (window.XMLHttpRequest)
+        {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }  
+        
+        else
+        {
+            // code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        
+        
+        try{
+        xmlhttp.open("GET",url,false); //open, send, responseXML are
+        
+        xmlhttp.send(); //properties of XMLHTTPRequest
+        }
+        catch(e){
+            alert("XML document does not exist");
+            return false;
+            }
+        xmlDoc=xmlhttp.responseXML;
+       
+        if(xmlDoc.documentElement.nodeName == "parsererror"){
+          alert("Error in XML document");
+          return false;
+      }
+      
+      
+       
+     return xmlDoc;
+        
+        }
+      
+    
+
+        function demo(xmlDoc){ 
+    
+    table = "";
+    
+    var x = xmlDoc.getElementsByTagName("Header");
+    for (i = 0; i <x.length; i++) {
+        
+        table += "<table border><tr align=\"center\" style=\"font-weight:bold\"><td>" + x[i].getElementsByTagName("Data")[0].childNodes[0].nodeValue +
+    "</td><td>" + x[i].getElementsByTagName("Data")[1].childNodes[0].nodeValue + "</td><td>" + x[i].getElementsByTagName("Data")[2].childNodes[0].nodeValue + "</td><td>" + x[i].getElementsByTagName("Data")[3].childNodes[0].nodeValue + "</td><td>" + x[i].getElementsByTagName("Data")[4].childNodes[0].nodeValue + "</td></tr>";
+       if( i=x.length.max)
+       {table += "</table>";}
+}
+    
+
+    
+    var y = xmlDoc.getElementsByTagName("Row");
+             if(y.length == 0){alert("No Newspapers in XML file");return false;}
+    for(j = 0; j <y.length; j++){
+       
+        
+        if(is_all_ws(y[j].getElementsByTagName("Slot")[0])){
+            table += "<tr><td>";}
+        else 
+            table += "<tr><td>" + y[j].getElementsByTagName("Slot")[0].childNodes[0].nodeValue ;
+        
+        if(is_all_ws(y[j].getElementsByTagName("Newspaper")[0])){
+            table += "</td><td>";}
+        else
+            table += "</td><td>" + y[j].getElementsByTagName("Newspaper")[0].childNodes[0].nodeValue ;
+        
+        if(is_all_ws(y[j].getElementsByTagName("City")[0])){
+            table += "</td><td><li>";}
+        else
+            table += "</td><td><li>" + y[j].getElementsByTagName("City")[0].childNodes[0].nodeValue ;
+        
+        if(is_all_ws(y[j].getElementsByTagName("State")[0])){
+            table += "</li><li>";}
+        else
+            table += "</li><li>" + y[j].getElementsByTagName("State")[0].childNodes[0].nodeValue ;
+        
+        if(is_all_ws(y[j].getElementsByTagName("HomePage")[0])){
+            table += "</li></td><td>";}
+        else    
+            table += "</li></td><td><a target=\"_blank\" href='"+ y[j].getElementsByTagName("HomePage")[0].childNodes[0].nodeValue+"'>"+ y[j].getElementsByTagName("HomePage")[0].childNodes[0].nodeValue+"</a>";
+        
+        if(is_all_ws(y[j].getElementsByTagName("Logo")[0])){
+            table += "</td><td></td></tr>";}
+        else    
+            table += "</td><td><img src='"+ y[j].getElementsByTagName("Logo")[0].childNodes[0].nodeValue+"'></td></tr>";  
+        
+}
+     hWin = window.open("","Homework #4", "height=800,width=800,scrollbars=1");       
+    hWin.document.write(table);
+}
+
+            function is_all_ws( nod )
+{
+  // Use ECMA-262 Edition 3 String and RegExp features
+  return !(/[^\t\n\r ]/.test(nod.textContent));
+}
+            
+        function check(){
+         var a=document.forms["myform"]["URL"].value;
+            
+            if(a==""){
+                alert("Please Enter a Url");
+                return false; 
+            }
+            
+            
+            
+            if(a.slice(-4)!=".xml"){
+              alert("Invalid Url");
+              return false;
+            }
+            return true;
+        
+        }
+        </script>
+     
+     
+</body>
+</html>    
